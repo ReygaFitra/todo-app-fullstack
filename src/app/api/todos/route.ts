@@ -7,7 +7,7 @@ export const GET = async (req: NextRequest) => {
   return NextResponse.json({ get });
 };
 
-export const POST = async (req: NextRequest, res: NextResponse) => {
+export const POST = async (req: NextRequest) => {
   const { todos, date, time, description } = await req.json();
   try {
     await prisma.todos.create({
@@ -25,31 +25,34 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
   }
 };
 
-export const DELETE = async (req: NextRequest, id: number) => {
+export const DELETE = async (req: NextRequest) => {
+  const url = new URL(req.url).searchParams;
+  const id = Number(url.get('id')) || 0;
   try {
     await prisma.todos.delete({
       where: {
         id: id,
       },
     });
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: 200 });
   } catch (error) {
     console.log('something error:', error);
-    return NextResponse.json({ success: false });
+    return NextResponse.json({ success: 500 });
   }
 };
 
-export const UPDATE = async (req: NextRequest, data: Data, id: number) => {
+export const UPDATE = async (req: NextRequest) => {
+  const { todos, date, time, description, id } = await req.json();
   try {
     await prisma.todos.update({
       where: {
-        id: id,
+        id,
       },
       data: {
-        todos: data.todos,
-        date: data.date,
-        time: data.time,
-        description: data.description,
+        todos,
+        date,
+        time,
+        description,
       },
     });
     return NextResponse.json({ success: true });

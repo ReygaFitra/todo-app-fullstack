@@ -57,8 +57,8 @@ const Form = () => {
             <Input type="time" name="time" value={time} onChange={(e) => setTime(e.target.value)} placeholder="Select time" size="sm" required />
             <FormHelperText>Select time for your todo</FormHelperText>
             <Divider mt={2} />
-            <Button my={'3'} variant={'outline'} type="submit" disabled={isLoading}>
-              {isLoading ? 'Loading...' : 'Submit'}
+            <Button my={'3'} variant={'outline'} type="submit" isLoading={isLoading} loadingText="Submitting" spinnerPlacement="end">
+              Submit
             </Button>
           </CardBody>
         </Card>
