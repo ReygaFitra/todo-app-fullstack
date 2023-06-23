@@ -1,4 +1,4 @@
-import { Button, Divider, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react';
+import { Button, Divider, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
 import { Calendar, Timer } from 'lucide-react';
 
 interface ModalProps {
@@ -16,6 +16,7 @@ const ModalLayout = (props: ModalProps) => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{props.title}</ModalHeader>
+        <Divider />
         <ModalHeader display="flex" alignItems="center" gap={1}>
           <Calendar size={'25px'} />
           {props.date}
@@ -26,9 +27,11 @@ const ModalLayout = (props: ModalProps) => {
         </ModalHeader>
         <Divider />
         <ModalCloseButton />
-        <ModalBody>{props.description}</ModalBody>
+        <ModalBody>
+          <Text>{props.description}</Text>
+        </ModalBody>
         <ModalFooter>
-          <Button variant="outline" onClick={props.onClose}>
+          <Button variant="outline" onClick={props.onClose} size="md" rounded="sm">
             Close
           </Button>
         </ModalFooter>

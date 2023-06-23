@@ -3,6 +3,7 @@ import { Box, Button, Card, CardBody, CardHeader, CloseButton, Container, Divide
 import { Edit, FolderOpen, Calendar, Timer } from 'lucide-react';
 import ModalLayout from './ModalLayout';
 import { useEffect, useState } from 'react';
+import UpdateLayout from './UpdateLayout';
 
 interface CardProps {
   handler: any;
@@ -15,6 +16,7 @@ const CardLayout = (props: CardProps) => {
   const truncatedDescription = props.description.length > 28 ? props.description.slice(0, 28) + '...' : props.description;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [todos, setTodos] = useState([]);
+  const [actionName, setActionName] = useState('');
 
   const getData = async () => {
     const res = await fetch('http://localhost:3000/api/todos', { next: { revalidate: 0 } });
@@ -26,6 +28,10 @@ const CardLayout = (props: CardProps) => {
     getData();
   }, [todos]);
 
+  const handleButtonClick = (name: string) => {
+    setActionName(name);
+    onOpen();
+  };
   return (
     <>
       <Container my={4} w={'400px'} h={'200px'}>
@@ -50,10 +56,10 @@ const CardLayout = (props: CardProps) => {
                   {truncatedDescription}
                 </Text>
                 <Box mt={1} display={'flex'} gap={2} justifyContent={'end'}>
-                  <Button variant={'outline'} size={'sm'} rounded={'sm'} leftIcon={<Edit size={'20px'} />}>
+                  <Button onClick={() => handleButtonClick('edit')} name="edit" variant={'outline'} size={'sm'} rounded={'sm'} leftIcon={<Edit size={'20px'} />}>
                     Edit
                   </Button>
-                  <Button onClick={onOpen} variant={'outline'} size={'sm'} rounded={'sm'} leftIcon={<FolderOpen size={'20px'} />}>
+                  <Button onClick={() => handleButtonClick('detail')} name="detail" variant={'outline'} size={'sm'} rounded={'sm'} leftIcon={<FolderOpen size={'20px'} />}>
                     Detail
                   </Button>
                 </Box>
@@ -62,9 +68,11 @@ const CardLayout = (props: CardProps) => {
           </CardBody>
         </Card>
       </Container>
-      {todos.map((todo: any, index: number) => {
-        return <ModalLayout isOpen={isOpen} onClose={onClose} key={index} title={todo.todos} date={todo.date} time={todo.time} description={todo.description} />;
-      })}
+      {actionName === 'edit' && <UpdateLayout isOpen={isOpen} onClose={onClose} />}
+      {actionName === 'detail' &&
+        todos.map((todo: any, index: number) => {
+          return <ModalLayout isOpen={isOpen} onClose={onClose} key={index} title={todo.todos} date={todo.date} time={todo.time} description={todo.description} />;
+        })}
     </>
   );
 };
